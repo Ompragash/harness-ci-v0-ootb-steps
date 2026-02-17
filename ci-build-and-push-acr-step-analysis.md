@@ -199,6 +199,31 @@ The ACR step’s env assembly explicitly branches on infra type:
 | K8-only envs/behaviors | Yes | No | No | K8 branch: `PluginSettingUtils.java:1153`; snapshot mode: `PluginSettingUtils.java:1173`; artifact file: `PluginSettingUtils.java:1195` |
 | VM-only envs/behaviors | No | Yes | Yes (via VM path) | VM branch: `PluginSettingUtils.java:1158`; daemon off: `PluginSettingUtils.java:1159` |
 
+## UI Field / Input
+
+| Field / input | KubernetesDirect | KubernetesHosted | Cloud | VM | Docker | Optional? | Feature-flag impact | License impact | Tooltip ID | Tooltip content |
+|---|---:|---:|---:|---:|---:|---|---|---|---|---|
+| `identifier` | Y | Y | Y | Y | Y | No (Required) | None | None | None | None |
+| `name` | Y | Y | Y | Y | Y | No (Required) | None | None | None | None |
+| `spec.connectorRef` | Y | Y | Y | Y | Y | No (Required) | None | None | None *(Edit)* / `acrConnector` *(Input Set)* | `acrConnector` content not found in tooltip dictionary bundle |
+| `spec.repository` | Y | Y | Y | Y | Y | No (Required) | None | None | `repository` | Not found in tooltip dictionary bundle |
+| `spec.subscriptionId` | Y | Y | Y | Y | Y | Yes | None | None | `subscriptionId` | Not found in tooltip dictionary bundle |
+| `spec.tags` | Y | Y | Y | Y | Y | No (Required) | None | None | None *(Edit)* | None |
+| `spec.caching` | Y | Y | Y | Y | Y | Yes | `CI_ENABLE_INTELLIGENT_DEFAULTS` may default new step to `true` when unset | None | None | None |
+| `spec.baseImageConnectorRefs` | Y | Y | Y | Y | Y | Yes | None | None | `baseImageConnectorRefs` | Select authenticated Docker connector for base image pulls; recommended to avoid unauthenticated rate limits |
+| `spec.optimize` | Y | Y | N | N | N | Yes | None | None | `optimize` | Enables `--snapshotMode=redo` to reduce snapshot time |
+| `spec.dockerfile` | Y | Y | Y | Y | Y | Yes | None | None | `dockerfile` | Dockerfile name; defaults to root if not provided |
+| `spec.context` | Y | Y | Y | Y | Y | Yes | None | None | `context` | Path to Docker build context used by build (e.g., `COPY`) |
+| `spec.labels` | Y | Y | Y | Y | Y | Yes | None | None | None | None |
+| `spec.buildArgs` | Y | Y | Y | Y | Y | Yes | None | None | None | None |
+| `spec.target` | Y | Y | Y | Y | Y | Yes | None | None | `target` | Docker target build stage from Dockerfile |
+| `spec.remoteCacheImage` | Y | Y | N | N | N | Yes | None | None | `gcrRemoteCache` | Remote Docker layer cache image; repo should be in same host/project as build image |
+| `spec.envVariables` | Y | Y | Y | Y | Y | Yes | None | None | None | None |
+| `spec.runAsUser` | Y | N | Y | N | N | Yes | None | None | `runAsUser` | User ID for running processes in pod/container security context |
+| `spec.limitMemory` | Y | Y | N | N | N | Yes | None | None | `limitMemory` | Max memory; examples include `Mi/Gi`, default `500Mi` |
+| `spec.limitCPU` | Y | Y | N | N | N | Yes | None | None | `limitCPULabel` | Max CPU cores/millicpu, default `400m` |
+| `timeout` | Y | Y | Y | Y | Y | Yes | None | None | None *(Edit)* | None |
+
 ## Key Takeaways
 
 - ACR connector auth mappings are applied on both K8 and VM/hosted flows, but OIDC and manual flows use different env var names.

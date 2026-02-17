@@ -170,3 +170,30 @@ The Docker Registry step’s env assembly explicitly branches on infra type:
 - The Docker Registry step uses the Docker connector with only two auth modes: username/password or anonymous.
 - Connector credentials are mapped into `PLUGIN_USERNAME`, `PLUGIN_PASSW`, and `PLUGIN_REGISTRY`, not standard `DOCKER_*` envs.
 - Build inputs are mapped into plugin envs in `PluginSettingUtils.getDockerStepInfoEnvVariables`, with K8 and VM branches for cache and snapshot behavior.
+
+## UI Field / Input
+
+| Field / input | KubernetesDirect | KubernetesHosted | Cloud | VM | Docker | Optional? | Feature-flag impact | License impact (HAR) |
+|---|---:|---:|---:|---:|---:|---|---|---|
+| `identifier` | Y | Y | Y | Y | Y | No (Required) | None | None |
+| `name` | Y | Y | Y | Y | Y | No (Required) | None | None |
+| `spec.registryType` | Y | Y | Y | Y | Y | Yes | None | HAR option is disabled when HAR license is inactive. |
+| `spec.registryRef` *(HAR mode only)* | Y | Y | Y | Y | Y | Conditional (Required in HAR mode) | None | Indirect: only usable when HAR registry type is selectable. |
+| `spec.connectorRef` *(3rd-party mode only)* | Y | Y | Y | Y | Y | Conditional (Required in 3rd-party mode) | None | Indirect: this is the active required path when HAR is unavailable. |
+| `spec.repo` *(HAR: image picker, 3rd-party: text field)* | Y | Y | Y | Y | Y | No (Required) | `CI_REMOVE_FQN_DEPENDENCY_FOR_PRIVATE_REGISTRY_CONNECTOR_DOCKER` switches repo tooltip variant (FQN wording). | Indirect: input mode depends on registry type (HAR image-path select vs 3rd-party text). |
+| `spec.tags` | Y | Y | Y | Y | Y | No (Required) | None | None |
+| `spec.caching` | Y | Y | Y | Y | Y | Yes | `CI_ENABLE_INTELLIGENT_DEFAULTS` can auto-default to `true` for new steps when unset. | None |
+| `spec.baseImageConnectorRefs` | Y | Y | Y | Y | Y | Yes | None | None |
+| `spec.optimize` | Y | Y | N | N | N | Yes | None | None |
+| `spec.dockerfile` | Y | Y | Y | Y | Y | Yes | None | None |
+| `spec.context` | Y | Y | Y | Y | Y | Yes | None | None |
+| `spec.labels` | Y | Y | Y | Y | Y | Yes | None | None |
+| `spec.buildArgs` | Y | Y | Y | Y | Y | Yes | None | None |
+| `spec.target` | Y | Y | Y | Y | Y | Yes | None | None |
+| `spec.remoteCacheRepo` | Y | Y | N | N | N | Yes | None | None |
+| `spec.envVariables` | Y | Y | Y | Y | Y | Yes | None | None |
+| `spec.runAsUser` | Y | N | Y | N | N | Yes | None | None |
+| `spec.limitMemory` | Y | Y | N | N | N | Yes | None | None |
+| `spec.limitCPU` | Y | Y | N | N | N | Yes | None | None |
+| `timeout` | Y | Y | Y | Y | Y | Yes | None | None |
+

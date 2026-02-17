@@ -191,6 +191,25 @@ The S3 upload step uses the same env builder for all infra types:
 | OIDC env injection (`PLUGIN_ASSUME_ROLE`, `PLUGIN_OIDC_TOKEN_ID`) | Yes | Yes | Yes (via VM path) | OIDC injected before step envs: `PluginSettingUtils.java:2156`, `PluginSettingUtils.java:2458` |
 | Core upload plugin envs (`PLUGIN_BUCKET`, `PLUGIN_SOURCE`, `PLUGIN_TARGET`, etc.) | Yes | Yes | Yes (via VM path) | Assembly in `getUploadToS3StepInfoEnvVariables`: `PluginSettingUtils.java:2153` |
 
+# UI Field / Input
+
+| Field / Input | Visible In Build Flow(s) | Optional? | Tooltip ID | Tooltip Text / Content | Placeholder | Feature-Flag Influence | License Influence |
+|---|---|---|---|---|---|---|---|
+| `identifier` | All | No | — | — | — | None | None |
+| `name` | All | No | `ciS3Base_name` | Enter a name for this step. | — | None | None |
+| `spec.connectorRef` | All | No | `ciS3Base_spec.connectorRef` | AWS connector used to connect to S3; IAM policies must allow push/upload. | `select` | None | None |
+| `spec.region` | All | No | `region` | Relevant AWS region. | `pipelineSteps.regionPlaceholder` | None | None |
+| `spec.bucket` | All | No | `s3Bucket` | Name of the S3 bucket where artifact is uploaded. | — | None | None |
+| `spec.sourcePath` | All | No | `sourcePath` | Path to artifact file/folder to upload. | — | None | None |
+| `spec.endpoint` | All | Yes | `endpoint` | Endpoint for S3-compatible providers; not needed for AWS. | `pipelineSteps.endpointPlaceholder` | None | None |
+| `spec.target` | All | Yes | `gcsS3Target` | Path (relative to bucket) where artifact is stored. | `pipelineSteps.artifactsTargetPlaceholder` | None | None |
+| `spec.runAsUser` | `Cloud`, `KubernetesDirect` | Yes | `runAsUser` | UID used to run processes in pod/containers. | `1000` | None | None |
+| `spec.limitMemory` | `KubernetesDirect`, `KubernetesHosted` | Yes | `limitMemory` | Max container memory; default `500Mi`. | — | None | None |
+| `spec.limitCPU` | `KubernetesDirect`, `KubernetesHosted` | Yes | `limitCPULabel` | Max container CPU; default `400m`. | — | None | None |
+| `timeout` | All | Yes | — | — | `common.durationPlaceholder` | None | None |
+
+Also, in runtime-input mode, runtime-enabled fields can show generic `<+input>` placeholder.
+
 ## Key Takeaways
 
 - Upload to S3 uses the AWS connector with manual, OIDC, inherit-from-delegate, and IRSA auth flows.

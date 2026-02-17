@@ -166,6 +166,25 @@ The GCS upload step’s env assembly is shared across infra types but enables pr
 | Core upload plugin envs (`PLUGIN_SOURCE`, `PLUGIN_TARGET`) | Yes | Yes | Yes (via VM path) | Assembly in `getUploadToGCSStepInfoEnvVariables`: `PluginSettingUtils.java:2126` |
 | Proxy env (`PLUGIN_ENABLE_PROXY`) | No | Yes | Yes (via VM path) | Proxy only for VM: `PluginSettingUtils.java:2114` |
 
+## UI Field / Input
+
+| Field / Input | Visible In Build Flow(s) | Optional? | Tooltip ID | Tooltip Text / Content | Placeholder | Feature-Flag Influence | License Influence |
+|---|---|---|---|---|---|---|---|
+| `identifier` | All | No | — | — | — | None | None |
+| `name` | All | No | `ciGcsStep_name` | Enter a name for the Step. | — | None | None |
+| `spec.connectorRef` | All | No | `ciGcsStep_spec.connectorRef` | Harness GCP Connector for the GCP account where artifact is uploaded. | `select` | None | None |
+| `spec.bucket` | All | No | `gcsBucket` | Enter the source GCS bucket name. | — | None | None |
+| `spec.sourcePath` | All | No | `sourcePath` | Path to the artifact file/folder to upload. | — | None | None |
+| `spec.target` (optional config) | All | Yes | `gcsS3Target` | Path relative to bucket where artifact is stored. | `pipelineSteps.artifactsTargetPlaceholder` | None | None |
+| `spec.runAsUser` | `Cloud`, `KubernetesDirect` | Yes | `runAsUser` | UID used to run processes in pod/containers. | `1000` | None | None |
+| `spec.limitMemory` | `KubernetesDirect`, `KubernetesHosted` | Yes | `limitMemory` | Max container memory (default `500Mi`). | — | None | None |
+| `spec.limitCPU` | `KubernetesDirect`, `KubernetesHosted` | Yes | `limitCPULabel` | Max container CPU (default `400m`). | — | None | None |
+| `timeout` | All | Yes | — (edit view) | — | `common.durationPlaceholder` | None | None |
+
+Notes:
+- `spec.target` is in the step’s **Optional Config** section.
+- Runtime/input-set paths can show `<+input>` placeholder for runtime-enabled fields.
+
 ## Key Takeaways
 
 - Upload to GCS uses the GCP connector with the same manual/OIDC/delegate auth flows as GAR.

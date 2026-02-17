@@ -220,6 +220,39 @@ The Harness Code connector translates the repo identifier into a full git URL:
 | `repoName` (scoped repo identifier) | `GitCloneStepInfo.repoName` | Step metadata + connector utils | JWT token scoped to repo; repo URL constructed from account/org/project/repo |
 | `connectorRef` omitted | `GitCloneStepInfo.connectorRef` blank | Harness Code detection | Harness Code connector path is used |
 
+### UI Field / Input
+
+| Field / Input (UI) | Visible In Build Flow(s) | Optional? | Tooltip ID | Tooltip Text / Content | Feature-Flag Influence | License Influence |
+|---|---|---|---|---|---|---|
+| `identifier` | All | No | — | — | None | None |
+| `name` | All | No | — | — | None | None |
+| `description` | All | Yes | — | — | None | None |
+| `provider` (Git provider selector) | All (only when FF enabled) | Yes (UI selector) | — | — | `CODE_ENABLED`: when off, provider selector is hidden and flow defaults to non-Harness-Code path | None |
+| `spec.connectorRef` (inside connector+repo control) | All (when non-Harness-Code provider) | Conditional | `rightBarForm_connectorRef` | “Use the dropdown to select an existing Harness Git connector or to create a new connector. [Learn More](https://docs.harness.io/article/v9sigwjlgo)” | `CODE_ENABLED` affects whether Harness Code provider can hide connector requirement | None |
+| `spec.repoName` (inside connector+repo control) | All | Conditional | `rightBarForm_repoName` | “If URL Type is Git Repository, repo name is auto shown. If URL Type is Git Account, provide repo name at pipeline use time.” | `CODE_ENABLED` affects provider path and repo behavior | None |
+| `spec.build.type` | All | No | `buildType` | Select Git Branch / Git Tag (or Commit option in UI radio group), then provide corresponding ref. | None | None |
+| `spec.build.spec.branch` | All (only when build type = `branch`) | Conditional (by build type) | — | — | None | None |
+| `spec.build.spec.tag` | All (only when build type = `tag`) | Conditional (by build type) | — | — | None | None |
+| `spec.build.spec.commitSha` | All (only when build type = `commitSha`) | Conditional (by build type) | — | — | None | None |
+| `spec.cloneDirectory` | All | Yes | `cloneDirectory` | “Enter an optional target path in the stage workspace where you want to clone the repo.” | None | None |
+| `spec.depth` | All | Yes | `depth` | “Number of commits to fetch when cloning. Default 50 for manual; 0 for other triggers.” | None | None |
+| `spec.prCloneStrategy` | All | Yes | `prCloneStrategy` | Controls PR build artifact source: merge commit vs source branch. | None | None |
+| `spec.fetchTags` | All | Yes | `cloneCodebase_fetchTags` | “Fetch all tags for shallow clone (`depth > 0`), equivalent to `--tags`.” | None | None |
+| `spec.lfs` | All | Yes | `cloneCodebase_lfs` | “Set true to download Git-LFS files.” | None | None |
+| `spec.sparseCheckout` | All | Yes | `cloneCodebase_sparseCheckout` | “Do sparse checkout on given patterns (cone mode directories).” | None | None |
+| `spec.submoduleStrategy` | All | Yes | `cloneCodebase_submoduleStrategy` | “Include submodules (true/recursive).” | None | None |
+| `spec.preFetchCommand` | All | Yes | `cloneCodebase_prefetchCommand` | “Additional Git commands before fetch; one command per line.” | None | None |
+| `spec.sslVerify` | All | Yes | `sslVerify` | “If true (default), verify Git SSL certs; false only for known cert issues.” | None | None |
+| `spec.privileged` | `Cloud`, `KubernetesDirect` only | Yes | `privileged` | Run containers with Docker `--privileged` (elevated privileges/security risk). | None | None |
+| `spec.runAsUser` | All (forced visible for this step) | Yes | `runAsUser` | “Specify UID to run processes in pod/containers.” | None | None |
+| `spec.limitMemory` | `KubernetesDirect`, `KubernetesHosted` only | Yes | `limitMemory` | “Maximum memory for container (default 500Mi).” | None | None |
+| `spec.limitCPU` | `KubernetesDirect`, `KubernetesHosted` only | Yes | `limitCPULabel` | “Maximum CPU for container (default 400m).” | None | None |
+| `timeout` | All | Yes | — (edit view) | — | None | None |
+
+Conditional requiredness in this step:
+- `spec.connectorRef` is required when provider is non-Harness-Code.
+- `spec.repoName` is required for Harness-Code provider, or for Account-type connector URL mode.
+
 ### Notes
 
 - The Harness Code path is gated by `CODE_ENABLED` and uses the configured `harnessCodeGitBaseUrl` (see `ConnectorUtils.java:214` + `332-ci-manager/config/ci-manager-config.yml:725` for the config key).

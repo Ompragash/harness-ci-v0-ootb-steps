@@ -211,6 +211,32 @@ The ECR step’s env assembly explicitly branches on infra type:
 | K8-only envs/behaviors | Yes | No | No | K8 branch: `PluginSettingUtils.java:1275`; snapshot mode: `PluginSettingUtils.java:1286`; artifact file: `PluginSettingUtils.java:1311` |
 | VM-only envs/behaviors | No | Yes | Yes (via VM path) | VM branch: `PluginSettingUtils.java:1312`; daemon off: `PluginSettingUtils.java:1315` |
 
+## UI Field / Input
+
+| Field / input | KubernetesDirect | KubernetesHosted | Cloud | VM | Docker | Optional? | Feature-flag impact | License impact | Tooltip ID | Tooltip content |
+|---|---:|---:|---:|---:|---:|---|---|---|---|---|
+| `identifier` | Y | Y | Y | Y | Y | No (Required) | None | None | None | None |
+| `name` | Y | Y | Y | Y | Y | No (Required) | None | None | None | None |
+| `spec.connectorRef` | Y | Y | Y | Y | Y | No (Required) | None | None | None *(Edit)* / `ecrConnector` *(Input Set)* | `ecrConnector` text not present in loaded tooltip dictionary |
+| `spec.region` | Y | Y | Y | Y | Y | No (Required) | None | None | `region` | AWS region guidance for ECR/S3/cache steps |
+| `spec.account` | Y | Y | Y | Y | Y | No (Required) | None | None | `ecrAccount` | AWS account ID to push image |
+| `spec.imageName` | Y | Y | Y | Y | Y | No (Required) | None | None | `imageName` | Image name with optional tag/digest format |
+| `spec.tags` | Y | Y | Y | Y | Y | No (Required) | None | None | None *(Edit)* | None |
+| `spec.caching` | Y | Y | Y | Y | Y | Yes | `CI_ENABLE_INTELLIGENT_DEFAULTS` can auto-set `true` for new steps when unset | None | None | None |
+| `spec.baseImageConnectorRefs` | Y | Y | Y | Y | Y | Yes | None | None | `baseImageConnectorRefs` | Authenticated base-image pull connector guidance |
+| `spec.optimize` | Y | Y | N | N | N | Yes | None | None | `optimize` | Enables Kaniko snapshot optimization |
+| `spec.dockerfile` | Y | Y | Y | Y | Y | Yes | None | None | `dockerfile` | Dockerfile path/name guidance |
+| `spec.context` | Y | Y | Y | Y | Y | Yes | None | None | `context` | Docker build context path guidance |
+| `spec.labels` | Y | Y | Y | Y | Y | Yes | None | None | None | None |
+| `spec.buildArgs` | Y | Y | Y | Y | Y | Yes | None | None | None | None |
+| `spec.target` | Y | Y | Y | Y | Y | Yes | None | None | `target` | Docker target build stage |
+| `spec.remoteCacheImage` | Y | Y | N | N | N | Yes | None | None | `gcrRemoteCache` | Remote Docker layer cache image format/constraints |
+| `spec.envVariables` | Y | Y | Y | Y | Y | Yes | None | None | None | None |
+| `spec.runAsUser` | Y | N | Y | N | N | Yes | None | None | `runAsUser` | Run-as user ID guidance |
+| `spec.limitMemory` | Y | Y | N | N | N | Yes | None | None | `limitMemory` | Container memory limit format/default guidance |
+| `spec.limitCPU` | Y | Y | N | N | N | Yes | None | None | `limitCPULabel` | Container CPU limit format/default guidance |
+| `timeout` | Y | Y | Y | Y | Y | Yes | None | None | None *(Edit)* | None |
+
 ## Key Takeaways
 
 - The **connector auth mappings** (manual creds, OIDC, cross-account) are applied on both K8 and VM/hosted flows.

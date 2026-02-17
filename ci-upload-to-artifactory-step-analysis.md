@@ -139,6 +139,26 @@ Proxy env is only set on VM:
 | Core upload plugin envs (`PLUGIN_SOURCE`, `PLUGIN_TARGET`, `PLUGIN_FLAT`) | Yes | Yes | Yes (via VM path) | Assembly in `getUploadToArtifactoryStepInfoEnvVariables`: `PluginSettingUtils.java:2013` |
 | Proxy env (`PLUGIN_ENABLE_PROXY`) | No | Yes | Yes (via VM path) | Proxy only for VM: `PluginSettingUtils.java:2114` |
 
+## UI Field / Input
+
+Build flows considered: `Cloud`, `KubernetesDirect`, `KubernetesHosted`, `VM`, `Docker`.
+
+| Field / Input | Visible In Build Flow(s) | Optional? | Tooltip ID | Tooltip Text / Content | Placeholder | Feature-Flag Influence | License Influence |
+|---|---|---|---|---|---|---|---|
+| `identifier` | All | No | — | — | — | None | None |
+| `name` | All | No | `jfrogArt_name` | Enter a name for this step. (Includes step help text/link for Upload Artifacts to JFrog Artifactory.) | — | None | None |
+| `description` | All | Yes | `jfrogArt_description` | Not found in shared tooltip dictionary (ID is rendered in UI). | — | None | None |
+| `spec.connectorRef` | All | No | `jfrogArt_spec.connectorRef` | Select the Harness Artifactory Connector to use for upload. | `select` | None | None |
+| `spec.target` | All | No | `jFrogArtifactoryTarget` | Repository name relative to connector server URL; if no `pom.xml`, target should be full artifacts folder path. | — | None | None |
+| `spec.sourcePath` | All | No | `sourcePath` | Path to artifact file/folder to upload. | — | None | None |
+| `spec.uploadAsFlat` (optional config) | All (when FF enabled) | Yes | `uploadAsFlat` | If false, upload preserves filesystem hierarchy; default behavior is flat upload. | `select` | Controlled by `CI_ENABLE_UPLOAD_AS_FLAT` | None |
+| `spec.runAsUser` (optional config) | `Cloud`, `KubernetesDirect` | Yes | `runAsUser` | UID used to run processes in pod/containers. | `1000` | None | None |
+| `spec.limitMemory` (optional config) | `KubernetesDirect`, `KubernetesHosted` | Yes | `limitMemory` | Max container memory (default `500Mi`). | — | None | None |
+| `spec.limitCPU` (optional config) | `KubernetesDirect`, `KubernetesHosted` | Yes | `limitCPULabel` | Max container CPU (default `400m`). | — | None | None |
+| `timeout` (optional config) | All | Yes | — (edit view) | — | `common.durationPlaceholder` | None | None |
+
+If you want, I can do the same full table next for **Build and Push to ECR** or any other CI step.
+
 ## Key Takeaways
 
 - Artifactory Upload uses the Artifactory connector with either Username/Password or Anonymous auth.

@@ -153,6 +153,27 @@ VM/Hosted uses the Plugin VM serializer:
 | `reports` (JUnit) | No | Yes | Yes | VM-only wiring: `VmPluginStepSerializer.java:329`. |
 | Connector secret mapping to `PLUGIN_*` | No | No | No | `PLUGIN` has empty mapping: `PluginSettingUtils.java:743`. |
 
+# UI Field / Input
+
+| Field / input | KubernetesDirect | KubernetesHosted | Cloud | VM | Docker | Optional? | Feature-flag impact | License impact | Tooltip ID | Tooltip content |
+|---|---:|---:|---:|---:|---:|---|---|---|---|---|
+| `identifier` | Y | Y | Y | Y | Y | No (Required) | None | None | None | None |
+| `name` | Y | Y | Y | Y | Y | No (Required) | None | None | None | None |
+| `description` | Y | Y | Y | Y | Y | Yes | None | None | None | None |
+| `spec.registryType` | Y | Y | Y | Y | Y | Yes | None | HAR option disabled when HAR license inactive | None | None |
+| `spec.registryRef` *(HAR mode only)* | Y | Y | Y | Y | Y | Conditional (Required in HAR mode) | None | Available/required only when HAR mode is selected | None | None |
+| `spec.connectorRef` *(3rd-party mode only)* | Y | Y | Y | Y | Y | Conditional (Required in 3rd-party mode) | None | Active path when HAR is not used | None *(Edit)* / `connector` *(Input Set)* | `connector` text not present in loaded tooltip dictionary |
+| `spec.image` | Y | Y | Y | Y | Y | No (Required) | None | Indirect via registry mode | `pluginImageInfo` *(3rd-party mode)* | Plugin image name; include tag, defaults to `latest` if omitted |
+| `spec.privileged` | Y | N | N | N | N | Yes | None | None | `privileged` | Runs containers with Docker `--privileged` (security risk if misused) |
+| `spec.settings` | Y | Y | Y | Y | Y | Yes | None | None | None *(Edit)* / `pluginSettings` *(Input Set)* | `pluginSettings` text not present in loaded tooltip dictionary |
+| `spec.reportPaths` | Y | Y | Y | Y | Y | Yes | None | None | `reportPaths` *(Input Set)* | `reportPaths` text not present in loaded tooltip dictionary |
+| `spec.entrypoint` | Y | Y | Y | Y | Y | Yes | None | None | `dependencyEntryPoint` | Overrides image entrypoint; provide exec-form commands/args |
+| `spec.imagePullPolicy` | Y | Y | Y | Y | Y | Yes | None | None | `imagePullPolicy` | Always / If Not Present / Never behavior |
+| `spec.runAsUser` | Y | Y | Y | Y | Y | Yes | None | None | `runAsUser` | User ID used to run processes in pod/container |
+| `spec.limitMemory` | Y | Y | N | N | N | Yes | None | None | `limitMemory` | Max container memory (default `500Mi`) |
+| `spec.limitCPU` | Y | Y | N | N | N | Yes | None | None | `limitCPULabel` | Max container CPU (default `400m`) |
+| `timeout` | Y | Y | Y | Y | Y | Yes | None | None | None | None |
+
 ## Key Takeaways
 
 - The Plugin step is **user-image driven**. There is **no fixed plugin image**; you must supply `image` (or `uses` for DLITE_VM).
